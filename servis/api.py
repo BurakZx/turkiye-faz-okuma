@@ -105,7 +105,8 @@ def uygulama_olustur(db_yolu: str | Path, okuyucu: FazOkuyucu, arsiv: str | Path
                  JOIN analist_incelemesi a ON a.okuma_id = f.okuma_id
                  WHERE a.karar IN ('onayla', 'duzelt')
                    AND a.inceleme_id = (SELECT MAX(inceleme_id) FROM analist_incelemesi WHERE okuma_id = f.okuma_id)"""
-        return [dict(r) for r in con.execute(sql)]
+        # Dışarıya sunucudaki tam yol değil, yalnızca arşivdeki dosya adı verilir
+        return [dict(r) | {"dosya": Path(r["dosya"]).name} for r in con.execute(sql)]
 
     return app
 

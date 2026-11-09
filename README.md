@@ -55,10 +55,10 @@ Diğer tasarım belgeleri `diyagramlar/` altında: kullanım senaryosu, sınıf 
 
 Tüm sonuçlar `sonuclar/` altında: `ozet_metrikler.csv`, `eslesmeler.csv`, `referans_okumalar.csv`, `olay_bazli_artik.csv`, `artik_ayristirma.csv`, `veri_hacmi_tahmini.csv`, `guc_analizi.csv`, `ON_DENEME_OZETI.md`.
 
-**F1 belirsizliği:** Olay düzeyinde bootstrap ile P F1 güven aralıkları ≈ ±0,07; S'de çok geniş (ör. STEAD 0,61–0,95), bu yüzden S F1 farkları anlamlı değildir (`sonuclar/f1_guven_araligi.csv`).
+**F1 belirsizliği:** Olay düzeyinde bootstrap ile P F1 güven aralıkları ≈ ±0,07; S'de çok geniş (ör. STEAD 0,61–0,95), bu yüzden S F1 farkları anlamlı değildir. M6,2 depremi çıkarıldığında S F1 0,71'den 0,86'ya çıkıyor; S başarımını büyük ölçüde bu olay aşağı çekiyor (`sonuclar/f1_guven_araligi.csv`). INSTANCE ağırlıkları P'de güçlü ama S'de zayıf; STEAD iki fazda dengeli.
 
 **Sınırlılıklar:**
-- Örneklem küçük (8 olay) ve istatistiksel test yapılmadı.
+- Örneklem küçük (8 olay). Olay düzeyinde bootstrap güven aralıkları hesaplandı (8 olayla yaklaşık); McNemar gibi eşleştirilmiş testler ve pratik eşiğe dayalı karar asıl deneyde yapılacak.
 - Bültende okumanın elle mi otomatik mi yapıldığı belirtilmiyor.
 - S referansı az (43 okuma) ve yarısı tek depremden.
 - FP yalnızca referanslı istasyon/fazda sayıldı; precision iyimserdir.
@@ -109,7 +109,7 @@ python3 -m venv .venv
 
 ![Panel](sekiller/dikey_dilim_panel.png)
 
-Kısa demo videosu: [`sekiller/dikey_dilim_demo.mp4`](sekiller/dikey_dilim_demo.mp4)
+Altyazılı demo videosu (40 s; API'ye kayıt yükleme → panelde onay/düzeltme → eğitim etiketleri): [`sekiller/dikey_dilim_demo.mp4`](sekiller/dikey_dilim_demo.mp4)
 
 Diyagramları yeniden üretmek için Graphviz ve PlantUML gerekir:
 

@@ -85,9 +85,11 @@ def main():
         f1 = lambda d: 2 * d.TP.sum() / (2 * d.TP.sum() + d.FP.sum() + d.FN.sum())
         bs = [f1(g.iloc[rng.choice(len(g), len(g))]) for _ in range(B_SAYISI)]
         f1_satir.append({"model": m, "faz": faz, "F1": f1(g), "GA_alt": np.percentile(bs, 2.5),
-                         "GA_ust": np.percentile(bs, 97.5)})
+                         "GA_ust": np.percentile(bs, 97.5),
+                         "F1_M62_haric": f1(g.drop(index="us7000pufs", errors="ignore"))})
     f1_df = pd.DataFrame(f1_satir)
-    f1_df.round(3).to_csv(SONUC / "f1_guven_araligi.csv", index=False)
+    # Yuvarlama yok: tablolar aynı ham değeri tek kez yuvarlasın (0,525 → 0,53 / 0,52 tutarsızlığı olmasın)
+    f1_df.to_csv(SONUC / "f1_guven_araligi.csv", index=False)
     print(f1_df.round(2).to_string(index=False))
 
     # 3) şekil: olay bazında S artığı
