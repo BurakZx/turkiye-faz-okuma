@@ -1,0 +1,4 @@
+model,pencere_s,parametre,ms_batch1,ms_batch32,ms_pencere_basina_b32
+Özgün CRNN,30.01,357571,16.6,141.0,4.41
+PhaseNet,30.01,268443,1.0,11.0,0.34
+EQTransformer,60.0,376935,9.1,76.1,2.38

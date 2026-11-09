@@ -1,0 +1,19 @@
+# Python 3.12 ile denendi (9 Kasım 2026)
+# PyTorch CPU sürümü:  pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu
+# NVIDIA GPU ile eğitim için PyTorch'un CUDA sürümünü pytorch.org'daki komutla kurun.
+torch==2.15.0
+obspy==1.5.1
+seisbench==0.12.7
+numpy==2.5.4
+pandas==3.1.1
+matplotlib==3.11.2
+h5py==3.16.0
+pytest==9.2.0
+scipy==1.18.1
+# Dikey dilim (servis/): API, analist paneli ve ekran görüntüsü
+fastapi==0.162.2
+uvicorn==0.54.0
+python-multipart==0.0.33
+httpx==0.28.1
+streamlit==1.67.0
+playwright==1.64.1   # yalnızca servis/ekran_goruntusu.py için; ardından: playwright install chromium

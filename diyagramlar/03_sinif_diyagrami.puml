@@ -1,0 +1,128 @@
+@startuml
+' Şekil: UML sınıf diyagramı (alan modeli + servis sınıfları)
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam ArrowColor #4A5568
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #4A5568
+  HeaderBackgroundColor #EEF2F7
+}
+hide empty members
+
+package "Alan Modeli" {
+  class Istasyon {
+    ag_kodu : str
+    istasyon_kodu : str
+    enlem : float
+    boylam : float
+    yukseklik_m : float
+  }
+  class Olay {
+    olay_id : str
+    zaman : datetime
+    enlem : float
+    boylam : float
+    derinlik_km : float
+    buyukluk : float
+    katalog : str
+  }
+  class DalgaFormuKaydi {
+    kayit_id : int
+    baslangic : datetime
+    bitis : datetime
+    ornekleme_hizi : float
+    bilesenler : str
+    dosya_yolu : str
+  }
+  enum FazTipi {
+    P
+    S
+  }
+  enum OkumaKaynagi {
+    MODEL
+    ANALIST
+    KATALOG
+  }
+  class FazOkumasi {
+    okuma_id : int
+    faz : FazTipi
+    zaman : datetime
+    olasilik : float
+    kaynak : OkumaKaynagi
+  }
+  class AnalistIncelemesi {
+    inceleme_id : int
+    karar : str
+    duzeltilmis_zaman : datetime
+    aciklama : str
+    tarih : datetime
+  }
+  class Kullanici {
+    kullanici_id : int
+    ad_soyad : str
+    rol : str
+  }
+  class ModelSurumu {
+    model_id : str
+    mimari : str
+    egitim_stratejisi : str
+    veri_kaynagi : str
+    agirlik_dosyasi : str
+  }
+  class DegerlendirmeSonucu {
+    veri_bolmesi : str
+    faz : str
+    metrik : str
+    deger : float
+  }
+}
+
+package "Servis Katmanı" {
+  class VeriToplayici {
+    + istasyon_getir(ag, bolge) : List<Istasyon>
+    + dalga_formu_indir(istasyon, t1, t2) : DalgaFormuKaydi
+  }
+  class OnIsleyici {
+    + filtrele(kayit, fmin, fmax)
+    + yeniden_ornekle(kayit, hz)
+    + normalize_et(kayit)
+    + hdf5_yaz(kayitlar, yol)
+  }
+  interface FazOkuyucu {
+    + tahmin_et(kayit) : List<FazOkumasi>
+  }
+  class PhaseNetOkuyucu
+  class EQTransformerOkuyucu
+  class CRNNOkuyucu
+  class ModelKayitDefteri {
+    + kaydet(model : ModelSurumu)
+    + getir(model_id) : FazOkuyucu
+    + en_iyi_model(metrik) : ModelSurumu
+  }
+  class Degerlendirici {
+    + eslestir(tahmin, referans, tolerans_s)
+    + metrik_hesapla() : DegerlendirmeSonucu
+  }
+}
+
+Istasyon "1" -- "0..*" DalgaFormuKaydi
+Olay "0..1" -- "0..*" DalgaFormuKaydi
+DalgaFormuKaydi "1" *-- "0..*" FazOkumasi
+FazOkumasi "0..*" --> "0..1" ModelSurumu : üreten
+FazOkumasi "1" -- "0..*" AnalistIncelemesi
+AnalistIncelemesi "0..*" --> "1" Kullanici : yapan
+ModelSurumu "1" -- "0..*" DegerlendirmeSonucu
+
+FazOkuyucu <|.. PhaseNetOkuyucu
+FazOkuyucu <|.. EQTransformerOkuyucu
+FazOkuyucu <|.. CRNNOkuyucu
+ModelKayitDefteri o-- "0..*" ModelSurumu
+ModelKayitDefteri ..> FazOkuyucu : oluşturur
+VeriToplayici ..> DalgaFormuKaydi
+OnIsleyici ..> DalgaFormuKaydi
+Degerlendirici ..> DegerlendirmeSonucu
+Degerlendirici ..> FazOkumasi
+@enduml

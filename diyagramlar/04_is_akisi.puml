@@ -1,0 +1,47 @@
+@startuml
+' Şekil: UML aktivite (iş akışı) diyagramı — bir kaydın sistemdeki yolculuğu
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam ArrowColor #4A5568
+skinparam activity {
+  BackgroundColor #FFFFFF
+  BorderColor #4A5568
+  DiamondBackgroundColor #FDF1E3
+}
+skinparam swimlaneBorderColor #9AA5B1
+
+|Veri Servisi|
+start
+:Yeni dalga formu kaydı\n(MiniSEED) yayınlanır;
+|Sistem|
+:Veri Toplayıcı kaydı indirir\nve ham arşive yazar;
+:Ön işleme\n(trend giderme, 1–45 Hz bant geçiren filtre,\n100 Hz yeniden örnekleme, Z-N-E sıralama);
+if (Kalite kontrol\n(3 bileşen var mı, veri boşluğu < %5?)) then (geçti)
+  :30 s'lik kayan pencerelere böl\n(%50 örtüşme) ve normalize et;
+  :Seçili model ile P / S / gürültü\nolasılık serilerini üret;
+  :Eşik üstü tepeleri faz okumasına çevir\n(P ≥ 0,3 · S ≥ 0,3);
+  :Okumaları veritabanına yaz\n(kaynak = MODEL);
+  if (Kalibre olasılık ≥ eşik?\n(başlangıç 0,7)) then (yüksek güven)
+    :Okumayı "otomatik kabul"\nolarak işaretle;
+    :API üzerinden katalog\nistemcisine ilet;
+  else (düşük güven)
+    :Analist inceleme\nkuyruğuna ekle;
+  endif
+  |Analist|
+  :Dalga formu ve olasılık eğrisini\npanelde incele;
+  if (Karar?) then (onayla)
+    :Okumayı onayla;
+  elseif () then (düzelt)
+    :Faz zamanını sürükleyerek düzelt;
+  else (reddet)
+    :Okumayı reddet\n(yanlış pozitif);
+  endif
+  |Sistem|
+  :İncelemeyi kaydet\n(kullanıcı, zaman, karar);
+  :Düzeltilmiş / onaylı okumaları\neğitim havuzuna ekle;
+else (kaldı)
+  :Kaydı "kalite hatası" ile\nişaretle ve logla;
+endif
+stop
+@enduml

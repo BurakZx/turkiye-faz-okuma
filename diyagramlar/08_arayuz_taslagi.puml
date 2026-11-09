@@ -1,0 +1,47 @@
+@startsalt
+' Şekil: Analist paneli arayüz taslağı (wireframe)
+{+
+  {* Dosya | Görünüm | Modeller | Raporlar | Yardım }
+  {
+    İstasyon: | ^KO.ISK - Kandilli^ | Olay: | ^2025-04-23 09:49 · M6,2 · Marmara^ | Model: | ^CRNN-STEAD-FT v1^ | [ Çalıştır ]
+  }
+  ==
+  {
+    {+
+      <b>İnceleme kuyruğu</b>
+      {#
+        Kayıt | Faz | Olasılık | Durum
+        KO.ISK | P | 0,92 | Otomatik kabul
+        KO.ISK | S | 0,61 | Bekliyor
+        KO.SILT | P | 0,48 | Bekliyor
+        KO.BGKT | S | 0,35 | Bekliyor
+      }
+      [ Yalnızca bekleyenler ] | [ Dışa aktar (CSV) ]
+    } | {+
+      <b>Dalga formu ve model çıktısı</b>
+      .
+      [ Z bileşeni grafiği · P işareti ]
+      [ N bileşeni grafiği ]
+      [ E bileşeni grafiği · S işareti ]
+      [ P / S olasılık eğrileri ]
+      .
+      Yakınlaştır: [ - ] [ + ] | Zaman: ^30 s^
+    } | {+
+      <b>Seçili okuma</b>
+      Faz: | P
+      Zaman (UTC): | "09:49:19.84"
+      Olasılık: | 0,61
+      Model: | CRNN-STEAD-FT
+      ..
+      Not: | "                "
+      ..
+      [ Onayla ] | [ Düzelt ] | [ Reddet ]
+      ..
+      <b>Model karşılaştırma</b>
+      PhaseNet: | 09:49:19.91
+      EQTransformer: | 09:49:19.80
+      CRNN: | 09:49:19.84
+    }
+  }
+}
+@endsalt

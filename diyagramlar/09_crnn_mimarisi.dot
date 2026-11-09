@@ -1,0 +1,39 @@
+// Şekil: Önerilen CRNN mimarisi (crnn_model.py ile birebir aynı)
+digraph crnn {
+  graph [rankdir=TB, fontname="DejaVu Sans", pad=0.3, nodesep=0.25, ranksep=0.32, bgcolor="white"];
+  node  [fontname="DejaVu Sans", fontsize=10.5, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#4a5568", penwidth=1.2, width=3.2];
+  edge  [fontname="DejaVu Sans", fontsize=9, color="#4a5568", arrowsize=0.7];
+
+  girdi [label="Girdi: 3 bileşenli dalga formu (Z, N, E)\n3 × 3001 örnek  (30 s · 100 Hz)", fillcolor="#eef2f7"];
+
+  subgraph cluster_ms {
+    label="Çok Ölçekli Paralel Evrişim Bloğu"; style="rounded,filled"; fillcolor="#fdf1e3"; color="#d6a76b"; fontname="DejaVu Sans"; fontsize=10;
+    k1 [label="Conv1d k=7\n8 filtre", width=1.1];
+    k2 [label="Conv1d k=15\n8 filtre", width=1.1];
+    k3 [label="Conv1d k=31\n8 filtre", width=1.1];
+    k4 [label="Conv1d k=63\n8 filtre", width=1.1];
+  }
+  birlestir [label="Birleştir (concat) → 32 kanal · BatchNorm · ReLU"];
+
+  e1 [label="Kodlayıcı 1: Conv1d k=7, adım 2 → 48 kanal  (1501)", fillcolor="#e8f4ec"];
+  e2 [label="Kodlayıcı 2: Conv1d k=7, adım 2 → 64 kanal  (751)", fillcolor="#e8f4ec"];
+  e3 [label="Kodlayıcı 3: Conv1d k=7, adım 2 → 96 kanal  (376)", fillcolor="#e8f4ec"];
+
+  gru [label="2 katmanlı çift yönlü GRU\ngizli boyut 64 → 128 öznitelik  (376 zaman adımı)", fillcolor="#efe9f7"];
+
+  d3 [label="Çözücü 3: yukarı örnekle ×2 + atlama bağlantısı (Kodlayıcı 2)", fillcolor="#e6f1fa"];
+  d2 [label="Çözücü 2: yukarı örnekle ×2 + atlama bağlantısı (Kodlayıcı 1)", fillcolor="#e6f1fa"];
+  d1 [label="Çözücü 1: yukarı örnekle ×2 + atlama bağlantısı (Çok ölçekli blok)", fillcolor="#e6f1fa"];
+
+  cikti [label="Conv1d 1×1 → 3 kanal · Softmax\nÇıktı: Gürültü / P / S olasılık serisi (3 × 3001)", fillcolor="#eef2f7"];
+
+  kayip [label="Bileşik kayıp fonksiyonu\nL = w_P·BCE(P) + w_S·BCE(S) + BCE(Gürültü)\n+ λ·[ |t̂_P − t_P| + |t̂_S − t_S| ]\n(t̂: soft-argmax ile türevlenebilir faz zamanı)", shape=note, fillcolor="#fff8e6"];
+
+  girdi -> {k1 k2 k3 k4};
+  {k1 k2 k3 k4} -> birlestir;
+  birlestir -> e1 -> e2 -> e3 -> gru -> d3 -> d2 -> d1 -> cikti;
+  cikti -> kayip [style=dashed, label="  eğitimde"];
+  e2 -> d3 [style=dotted, constraint=false];
+  e1 -> d2 [style=dotted, constraint=false];
+  birlestir -> d1 [style=dotted, constraint=false];
+}

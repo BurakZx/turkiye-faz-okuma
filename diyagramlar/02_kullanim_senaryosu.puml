@@ -1,0 +1,59 @@
+@startuml
+' Şekil: UML kullanım senaryosu diyagramı
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam ArrowColor #4A5568
+skinparam actorBackgroundColor #FFFFFF
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #4A5568
+}
+skinparam actorBorderColor #4A5568
+left to right direction
+
+actor "Sismolog /\nAnalist" as Analist
+actor "Araştırmacı" as Arastirmaci
+actor "Sistem\nYöneticisi" as Yonetici
+actor "Katalog / Bülten\nİstemcisi" as EEWS <<sistem>>
+actor "KOERI / AFAD\nVeri Servisi" as Servis <<sistem>>
+
+rectangle "Faz Okuma ve Karar Destek Sistemi" {
+  usecase "Sisteme giriş yap" as UC0
+  usecase "Dalga formu kayıtlarını\ngörüntüle" as UC1
+  usecase "Otomatik faz okumalarını\nincele" as UC2
+  usecase "Okumayı onayla /\ndüzelt / reddet" as UC3
+  usecase "Modelleri karşılaştır" as UC4
+  usecase "Rapor dışa aktar" as UC5
+  usecase "Veri setini oluştur\nve standartlaştır" as UC6
+  usecase "Model eğit /\nince ayar yap" as UC7
+  usecase "Modeli değerlendir\n(F1, MAE, RMSE)" as UC8
+  usecase "Model sürümünü\nyayınla" as UC9
+  usecase "Kullanıcıları ve\nrolleri yönet" as UC10
+  usecase "Veri kaynaklarını\nyapılandır" as UC11
+  usecase "API üzerinden\nfaz okuma iste" as UC12
+  usecase "Dalga formu indir" as UC13
+}
+
+Analist --> UC1
+Analist --> UC2
+Analist --> UC4
+Analist --> UC5
+UC3 .> UC2 : <<extend>>
+UC1 ..> UC0 : <<include>>
+UC2 ..> UC0 : <<include>>
+
+Arastirmaci --> UC6
+Arastirmaci --> UC7
+Arastirmaci --> UC8
+Arastirmaci --> UC9
+UC6 ..> UC13 : <<include>>
+UC9 ..> UC8 : <<include>>
+
+Yonetici --> UC10
+Yonetici --> UC11
+
+EEWS --> UC12
+UC13 <-- Servis
+@enduml

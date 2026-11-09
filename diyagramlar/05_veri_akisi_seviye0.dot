@@ -1,0 +1,23 @@
+// Şekil: Veri akış diyagramı — Seviye 0 (bağlam diyagramı)
+digraph dfd0 {
+  graph [rankdir=LR, fontname="DejaVu Sans", pad=0.3, nodesep=0.5, ranksep=1.1, bgcolor="white"];
+  node  [fontname="DejaVu Sans", fontsize=11, color="#4a5568", penwidth=1.2];
+  edge  [fontname="DejaVu Sans", fontsize=9, color="#4a5568", arrowsize=0.7];
+
+  koeri [label="KOERI FDSN Servisi\n(AFAD: erişim izniyle)", shape=box, style=filled, fillcolor="#eef2f7"];
+  stead [label="STEAD\nVeri Seti", shape=box, style=filled, fillcolor="#eef2f7"];
+  analist [label="Sismolog /\nAnalist", shape=box, style=filled, fillcolor="#eef2f7"];
+  arastirmaci [label="Araştırmacı", shape=box, style=filled, fillcolor="#eef2f7"];
+  eews [label="Katalog / Bülten\nİstemcisi", shape=box, style=filled, fillcolor="#eef2f7"];
+
+  sistem [label="0\n\nFaz Okuma ve\nKarar Destek Sistemi", shape=circle, style=filled, fillcolor="#fdf1e3", width=2.1, fixedsize=true];
+
+  koeri -> sistem [label="dalga formu,\nistasyon üst verisi"];
+  stead -> sistem [label="etiketli eğitim\nkayıtları"];
+  analist -> sistem [label="onay / düzeltme /\nret kararları"];
+  sistem -> analist [label="otomatik okumalar,\ngrafikler, raporlar"];
+  arastirmaci -> sistem [label="eğitim yapılandırması,\nhiper-parametreler"];
+  sistem -> arastirmaci [label="model metrikleri,\nmodel kartı"];
+  eews -> sistem [label="faz okuma isteği\n(dalga formu)"];
+  sistem -> eews [label="P/S zamanı +\nolasılık"];
+}

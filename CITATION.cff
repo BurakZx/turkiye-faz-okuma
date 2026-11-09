@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Bu yazılımı kullanırsanız lütfen aşağıdaki biçimde atıf yapın."
+title: "Türkiye'ye Özgü Sismik Veriler için Derin Öğrenme Tabanlı Otomatik Faz Okuma ve Karar Destek Sistemi"
+authors:
+  - family-names: Tarhan
+    given-names: Burak Can
+    affiliation: "İstanbul Ticaret Üniversitesi"
+version: 0.2.0
+date-released: 2026-11-10
+license: MIT
+keywords:
+  - seismology
+  - phase picking
+  - deep learning
+  - transfer learning
+  - decision support
+repository-code: "https://github.com/BurakZx/turkiye-faz-okuma"

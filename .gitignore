@@ -1,0 +1,28 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Ham veri (yeniden indirilebilir; bkz. veri/README.md)
+veri/*
+!veri/README.md
+
+# Dikey dilim çalışma dosyaları
+servis/faz.db
+servis/arsiv/
+
+# Model ağırlıkları ve büyük çıktılar
+*.pt
+*.pth
+*.h5
+*.hdf5
+
+# Editör / işletim sistemi
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*:Zone.Identifier

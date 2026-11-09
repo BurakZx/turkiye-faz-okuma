@@ -1,0 +1,123 @@
+@startuml
+' Şekil: Veritabanı ilişki (ER) diyagramı
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam ArrowColor #4A5568
+skinparam linetype ortho
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #4A5568
+  HeaderBackgroundColor #EEF2F7
+}
+hide circle
+hide empty members
+
+entity "istasyon" as istasyon {
+  * istasyon_id : SERIAL <<PK>>
+  --
+  * ag_kodu : VARCHAR(2)
+  * istasyon_kodu : VARCHAR(5)
+  enlem : NUMERIC(8,5)
+  boylam : NUMERIC(8,5)
+  yukseklik_m : NUMERIC
+}
+
+entity "olay" as olay {
+  * olay_id : VARCHAR <<PK>>
+  --
+  * zaman : TIMESTAMPTZ
+  enlem : NUMERIC
+  boylam : NUMERIC
+  derinlik_km : NUMERIC
+  buyukluk : NUMERIC(3,1)
+  katalog : VARCHAR
+}
+
+entity "kayit" as kayit {
+  * kayit_id : SERIAL <<PK>>
+  --
+  * istasyon_id : INT <<FK>>
+  olay_id : VARCHAR <<FK>>
+  * baslangic : TIMESTAMPTZ
+  * bitis : TIMESTAMPTZ
+  ornekleme_hizi : NUMERIC
+  bilesenler : VARCHAR(3)
+  dosya_yolu : TEXT
+  kalite_durumu : VARCHAR
+}
+
+entity "model_surumu" as model {
+  * model_id : VARCHAR <<PK>>
+  --
+  * mimari : VARCHAR
+  * egitim_stratejisi : VARCHAR
+  veri_kaynagi : VARCHAR
+  agirlik_dosyasi : TEXT
+  * veri_bolmesi_id : INT <<FK>>
+  esik : NUMERIC(3,2)
+  olusturma_tarihi : TIMESTAMPTZ
+}
+
+entity "veri_bolmesi" as bolme {
+  * veri_bolmesi_id : SERIAL <<PK>>
+  --
+  * ad : VARCHAR -- B1/B2/B3
+  * tur : VARCHAR -- ZAMAN/ISTASYON/BOLGE
+  * tohum : INT
+  * liste_ozeti : CHAR(64) -- SHA-256
+  olusturma_tarihi : TIMESTAMPTZ
+}
+
+entity "faz_okumasi" as okuma {
+  * okuma_id : BIGSERIAL <<PK>>
+  --
+  * kayit_id : INT <<FK>>
+  model_id : VARCHAR <<FK>>
+  * faz : CHAR(1)  -- 'P' / 'S'
+  * zaman : TIMESTAMPTZ
+  olasilik : NUMERIC(4,3)
+  * kaynak : VARCHAR -- MODEL/ANALIST/KATALOG
+  * durum : VARCHAR -- OTOMATIK/BEKLIYOR/...
+}
+
+entity "kullanici" as kullanici {
+  * kullanici_id : SERIAL <<PK>>
+  --
+  * eposta : VARCHAR <<UNIQUE>>
+  * parola_ozeti : TEXT
+  * rol : VARCHAR
+}
+
+entity "analist_incelemesi" as inceleme {
+  * inceleme_id : BIGSERIAL <<PK>>
+  --
+  * okuma_id : BIGINT <<FK>>
+  * kullanici_id : INT <<FK>>
+  * karar : VARCHAR -- ONAY/DUZELTME/RED
+  duzeltilmis_zaman : TIMESTAMPTZ
+  aciklama : TEXT
+  * kor_mod : BOOLEAN
+  * tarih : TIMESTAMPTZ
+}
+
+entity "degerlendirme" as deger {
+  * degerlendirme_id : SERIAL <<PK>>
+  --
+  * model_id : VARCHAR <<FK>>
+  * veri_bolmesi_id : INT <<FK>>
+  * faz : CHAR(1)
+  * metrik : VARCHAR -- F1, MAE, ECE...
+  * deger : NUMERIC
+}
+
+istasyon ||--o{ kayit
+olay |o--o{ kayit
+kayit ||--o{ okuma
+model |o--o{ okuma
+okuma ||--o{ inceleme
+kullanici ||--o{ inceleme
+model ||--o{ deger
+bolme ||--o{ model
+bolme ||--o{ deger
+@enduml

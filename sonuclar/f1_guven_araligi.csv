@@ -1,0 +1,13 @@
+model,faz,F1,GA_alt,GA_ust
+EQTransformer-instance,P,0.841,0.772,0.895
+EQTransformer-instance,S,0.576,0.426,0.923
+EQTransformer-original,P,0.558,0.448,0.637
+EQTransformer-original,S,0.597,0.425,0.933
+EQTransformer-stead,P,0.772,0.696,0.843
+EQTransformer-stead,S,0.714,0.61,0.95
+PhaseNet-instance,P,0.827,0.747,0.893
+PhaseNet-instance,S,0.525,0.297,0.947
+PhaseNet-original,P,0.786,0.702,0.861
+PhaseNet-original,S,0.692,0.563,0.976
+PhaseNet-stead,P,0.786,0.706,0.864
+PhaseNet-stead,S,0.713,0.613,0.95

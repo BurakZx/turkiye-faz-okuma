@@ -1,0 +1,27 @@
+[us7000pufs] M6.2 24 km SE of Marmara Ereğlisi, Turkey: 27 KO istasyonu, 27 P + 21 S referans okuma
+[us6000qznb] M6.1 10 km WSW of Bigadiç, Turkey: 18 KO istasyonu, 18 P + 8 S referans okuma
+[us6000rjsu] M6 7 km SE of Sındırgı, Turkey: 17 KO istasyonu, 17 P + 2 S referans okuma
+[us6000rdf2] M5.2 16 km NNW of Simav, Turkey: 15 KO istasyonu, 15 P + 2 S referans okuma
+[us6000re6a] M5 22 km S of Marmara Ereğlisi, Turkey: 24 KO istasyonu, 24 P + 3 S referans okuma
+[us6000plhn] M5 4 km SW of Behram, Turkey: 10 KO istasyonu, 10 P + 2 S referans okuma
+[us7000pugj] M4.9 24 km SSW of Selimpaşa, Turkey: 26 KO istasyonu, 26 P + 3 S referans okuma
+[us6000rfqg] M4.9 17 km WSW of Emet, Turkey: 16 KO istasyonu, 16 P + 2 S referans okuma
+  PhaseNet-original: FP={'P': 37, 'S': 8}, süre=0.8 s
+  PhaseNet-stead: FP={'P': 26, 'S': 13}, süre=0.7 s
+  PhaseNet-instance: FP={'P': 27, 'S': 2}, süre=0.6 s
+  EQTransformer-original: FP={'P': 15, 'S': 4}, süre=1.9 s
+  EQTransformer-stead: FP={'P': 30, 'S': 11}, süre=1.4 s
+  EQTransformer-instance: FP={'P': 22, 'S': 4}, süre=1.4 s
+                 model faz  referans  TP  FP  FN  precision  recall    F1  MAE_s  RMSE_s  ortalama_artik_s  sure_s
+     PhaseNet-original   P       153 123  37  30      0.769   0.804 0.786  0.178   0.229             0.058   0.763
+     PhaseNet-original   S        43  27   8  16      0.771   0.628 0.692  0.314   0.434             0.227   0.763
+        PhaseNet-stead   P       153 116  26  37      0.817   0.758 0.786  0.158   0.212             0.020   0.716
+        PhaseNet-stead   S        43  31  13  12      0.705   0.721 0.713  0.317   0.406             0.148   0.716
+     PhaseNet-instance   P       153 127  27  26      0.825   0.830 0.827  0.150   0.206             0.007   0.575
+     PhaseNet-instance   S        43  16   2  27      0.889   0.372 0.525  0.344   0.446             0.194   0.575
+EQTransformer-original   P       153  65  15  88      0.812   0.425 0.558  0.156   0.201            -0.004   1.875
+EQTransformer-original   S        43  20   4  23      0.833   0.465 0.597  0.332   0.442             0.203   1.875
+   EQTransformer-stead   P       153 115  30  38      0.793   0.752 0.772  0.172   0.217             0.040   1.434
+   EQTransformer-stead   S        43  30  11  13      0.732   0.698 0.714  0.294   0.389             0.158   1.434
+EQTransformer-instance   P       153 127  22  26      0.852   0.830 0.841  0.176   0.225             0.034   1.379
+EQTransformer-instance   S        43  19   4  24      0.826   0.442 0.576  0.339   0.437             0.195   1.379

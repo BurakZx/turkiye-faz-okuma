@@ -1,0 +1,70 @@
+// Şekil: Genel sistem mimarisi (katmanlı, yukarıdan aşağı)
+digraph mimari {
+  graph [rankdir=TB, fontname="DejaVu Sans", fontsize=13, nodesep=0.4, ranksep=0.45, pad=0.3, bgcolor="white", newrank=true];
+  node  [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#4a5568", penwidth=1.2];
+  edge  [fontname="DejaVu Sans", fontsize=9, color="#4a5568", arrowsize=0.7];
+
+  subgraph cluster_kaynak {
+    label="Veri Kaynakları"; style="rounded,filled"; fillcolor="#eef2f7"; color="#9aa5b1";
+    koeri [label="KOERI EIDA FDSN\n(KO ağı)"];
+    afad  [label="AFAD FDSN\n(TU ağı, erişim izniyle)"];
+    stead [label="STEAD\n(küresel, etiketli)"];
+  }
+
+  subgraph cluster_veri {
+    label="Veri Katmanı"; style="rounded,filled"; fillcolor="#e8f4ec"; color="#86b39a";
+    toplayici [label="Veri Toplayıcı\n(ObsPy FDSN Client)"];
+    ham  [label="Ham Arşiv\n(MiniSEED)", shape=cylinder, style=filled, fillcolor="#ffffff"];
+    onisleme  [label="Ön İşleme Hattı\nfiltre · 100 Hz · Z-N-E\nnormalizasyon · pencereleme"];
+    hdf5 [label="İşlenmiş Veri Deposu\n(HDF5 / SeisBench)", shape=cylinder, style=filled, fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_model {
+    label="Model Katmanı"; style="rounded,filled"; fillcolor="#fdf1e3"; color="#d6a76b";
+    egitim   [label="Eğitim ve Transfer\nÖğrenme Modülü\n(PyTorch)"];
+    registry [label="Model Kayıt Defteri\n(sürüm · ağırlık · model kartı)", shape=cylinder, style=filled, fillcolor="#ffffff"];
+    cikarim  [label="Çıkarım Motoru\nPhaseNet · EQTransformer · CRNN"];
+    deger    [label="Değerlendirme Modülü\nP · R · F1 · MAE · RMSE"];
+  }
+
+  subgraph cluster_servis {
+    label="Servis Katmanı"; style="rounded,filled"; fillcolor="#efe9f7"; color="#a48bc9";
+    auth [label="Kimlik Doğrulama\n(rol tabanlı)"];
+    api  [label="REST API (FastAPI)\n/pick · /models · /reviews"];
+    db   [label="İlişkisel VT (PostgreSQL)\nokumalar · incelemeler", shape=cylinder, style=filled, fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_sunum {
+    label="Sunum Katmanı ve İstemciler"; style="rounded,filled"; fillcolor="#e6f1fa"; color="#7aa7cf";
+    panel [label="Analist Paneli\n(web arayüzü)"];
+    rapor [label="Raporlama ve\nModel Karşılaştırma"];
+    eews  [label="Katalog / Bülten\nİstemcisi (dış)", style="rounded,dashed"];
+  }
+
+  { rank=same; koeri; afad; stead; }
+  { rank=same; toplayici; ham; }
+  { rank=same; onisleme; hdf5; }
+  { rank=same; egitim; registry; }
+  { rank=same; cikarim; deger; }
+  { rank=same; auth; api; db; }
+  { rank=same; panel; rapor; eews; }
+
+  koeri -> toplayici; afad -> toplayici;
+  toplayici -> ham;
+  ham -> onisleme;
+  stead -> onisleme [label="eğitim verisi"];
+  onisleme -> hdf5;
+  hdf5 -> egitim;
+  egitim -> registry [label="ağırlık"];
+  registry -> cikarim [label="seçili model"];
+  hdf5 -> cikarim [style=invis];
+  cikarim -> deger;
+  deger -> registry [label="metrikler", style=dashed];
+  cikarim -> api;
+  auth -> api [dir=both, style=dashed];
+  api -> db;
+  api -> panel [dir=both];
+  api -> rapor;
+  api -> eews [dir=both, style=dashed, label="P/S zamanı\n+ olasılık"];
+  db -> egitim [label="analist düzeltmeleri\n(yeni etiket)", style=dashed, constraint=false, color="#a0522d", fontcolor="#a0522d"];
+}

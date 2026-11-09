@@ -1,0 +1,59 @@
+// Şekil: Veri akış diyagramı — Seviye 1
+digraph dfd1 {
+  graph [rankdir=TB, fontname="DejaVu Sans", pad=0.3, nodesep=0.5, ranksep=0.55, bgcolor="white"];
+  node  [fontname="DejaVu Sans", fontsize=10, color="#4a5568", penwidth=1.2];
+  edge  [fontname="DejaVu Sans", fontsize=8.5, color="#4a5568", arrowsize=0.7];
+
+  // Dış varlıklar
+  node [shape=box, style=filled, fillcolor="#eef2f7"];
+  koeri [label="KOERI FDSN\n(AFAD: izinle)"];
+  stead [label="STEAD"];
+  analist [label="Analist"];
+  arastirmaci [label="Araştırmacı"];
+  eews [label="Katalog / Bülten\nİstemcisi"];
+
+  // Süreçler
+  node [shape=box, style="rounded,filled", fillcolor="#fdf1e3"];
+  p1 [label="1.0\nVeri Toplama"];
+  p2 [label="2.0\nÖn İşleme ve\nStandartlaştırma"];
+  p3 [label="3.0\nFaz Tahmini\n(Çıkarım)"];
+  p4 [label="4.0\nAnalist\nİncelemesi"];
+  p5 [label="5.0\nModel Eğitimi ve\nTransfer Öğrenme"];
+  p6 [label="6.0\nDeğerlendirme"];
+
+  // Veri depoları
+  node [shape=plain];
+  d1 [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="5" color="#4a5568" bgcolor="#ffffff"><tr><td border="1" sides="r">D1</td><td>Ham Dalga Formu Arşivi (MiniSEED)</td></tr></table>>];
+  d2 [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="5" color="#4a5568" bgcolor="#ffffff"><tr><td border="1" sides="r">D2</td><td>İşlenmiş Veri (HDF5)</td></tr></table>>];
+  d3 [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="5" color="#4a5568" bgcolor="#ffffff"><tr><td border="1" sides="r">D3</td><td>Model Kayıt Defteri</td></tr></table>>];
+  d4 [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="5" color="#4a5568" bgcolor="#ffffff"><tr><td border="1" sides="r">D4</td><td>Faz Okumaları ve İncelemeler (VT)</td></tr></table>>];
+  d5 [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="5" color="#4a5568" bgcolor="#ffffff"><tr><td border="1" sides="r">D5</td><td>Metrikler</td></tr></table>>];
+
+  { rank=same; koeri; stead; arastirmaci; }
+  { rank=same; p3; eews; p5; }
+  { rank=same; d4; d3; }
+  { rank=same; p4; p6; }
+  { rank=same; analist; d5; }
+  koeri -> p1 [label="dalga formu"];
+  p1 -> d1 [label="ham kayıt"];
+  d1 -> p2;
+  stead -> p2 [label="etiketli kayıt"];
+  p2 -> d2 [label="pencereli, normalize\nveri + etiket"];
+  d2 -> p3;
+  d3 -> p3 [label="model ağırlığı"];
+  eews -> p3 [label="istek"];
+  p3 -> eews [label="P/S zamanı"];
+  p3 -> d4 [label="otomatik okuma"];
+  d4 -> p4 [label="inceleme kuyruğu"];
+  p4 -> analist [label="grafik + okuma"];
+  analist -> p4 [label="karar"];
+  p4 -> d4 [label="onay / düzeltme"];
+  d2 -> p5 [label="eğitim kümesi"];
+  d4 -> p5 [label="analist etiketleri"];
+  arastirmaci -> p5 [label="yapılandırma"];
+  p5 -> d3 [label="yeni sürüm"];
+  d2 -> p6 [label="test kümesi"];
+  d3 -> p6;
+  p6 -> d5 [label="F1, MAE, RMSE"];
+  d5 -> arastirmaci [label="karşılaştırma\nraporu"];
+}
