@@ -15,7 +15,7 @@ from obspy import UTCDateTime, read
 
 API = os.environ.get("FAZ_API", "http://127.0.0.1:8000")
 REF = Path(__file__).resolve().parents[1] / "sonuclar" / "referans_okumalar.csv"
-st.set_page_config(page_title="Faz okuma — analist paneli", layout="wide")
+st.set_page_config(page_title="Faz okuma - analist paneli", layout="wide")
 
 
 @st.cache_data
@@ -31,7 +31,7 @@ def kuyruk() -> list[dict]:
     return httpx.get(f"{API}/okumalar", params={"durum": "bekliyor"}, timeout=10).json()
 
 
-st.title("Faz okuma — analist paneli")
+st.title("Faz okuma - analist paneli")
 st.caption(f"Dikey dilim prototipi · API: {API} · Eşik altındaki (olasılık < 0,7) okumalar inceleme kuyruğundadır.")
 try:
     tum = httpx.get(f"{API}/okumalar", timeout=10).json()
@@ -59,7 +59,7 @@ o = next(x for x in bekleyen if x["okuma_id"] == secili)
 t = UTCDateTime(o["zaman"])
 
 with orta:
-    st.subheader(f"{o['ag']}.{o['istasyon']} — {o['faz']} okuması, olasılık {virgul(o['olasilik'])}")
+    st.subheader(f"{o['ag']}.{o['istasyon']} - {o['faz']} okuması, olasılık {virgul(o['olasilik'])}")
     akis = read(o["dosya"]).slice(t - 8, t + 12)
     akis.detrend("demean").filter("bandpass", freqmin=1, freqmax=20)
     fig, axes = plt.subplots(len(akis), 1, figsize=(10, 3.6), sharex=True)

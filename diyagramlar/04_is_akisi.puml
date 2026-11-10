@@ -1,5 +1,5 @@
 @startuml
-' Şekil: UML aktivite (iş akışı) diyagramı — bir kaydın sistemdeki yolculuğu
+' Şekil: UML aktivite (iş akışı) diyagramı - bir kaydın sistemdeki yolculuğu
 skinparam defaultFontName "DejaVu Sans"
 skinparam defaultFontSize 11
 skinparam shadowing false

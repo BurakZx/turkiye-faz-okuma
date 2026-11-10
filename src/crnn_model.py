@@ -132,7 +132,7 @@ class BilesikKayip(nn.Module):
         self.w_p, self.w_s, self.lam, self.isinma_epok = w_p, w_s, lam, isinma_epok
 
     def forward(self, tahmin, hedef, t_p=None, t_s=None, epok: int | None = None):
-        # tahmin, hedef: (B, 3, N) — kanal sırası [Gürültü, P, S]
+        # tahmin, hedef: (B, 3, N) - kanal sırası [Gürültü, P, S]
         bce = lambda i: F.binary_cross_entropy(tahmin[:, i].clamp(1e-6, 1 - 1e-6), hedef[:, i])
         kayip = bce(0) + self.w_p * bce(1) + self.w_s * bce(2)
         zaman = tahmin.new_zeros(())
@@ -169,4 +169,4 @@ if __name__ == "__main__":
     kayip_fn = BilesikKayip()
     kayip = kayip_fn(y, hedef, torch.full((4,), 10.0), torch.full((4,), 18.0))
     kayip.backward()
-    print(f"Bileşik kayıp (rastgele ağırlıklarla): {kayip.item():.4f} — geri yayılım OK")
+    print(f"Bileşik kayıp (rastgele ağırlıklarla): {kayip.item():.4f} - geri yayılım OK")

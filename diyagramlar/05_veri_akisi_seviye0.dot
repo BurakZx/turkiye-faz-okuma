@@ -1,4 +1,4 @@
-// Şekil: Veri akış diyagramı — Seviye 0 (bağlam diyagramı)
+// Şekil: Veri akış diyagramı - Seviye 0 (bağlam diyagramı)
 digraph dfd0 {
   graph [rankdir=LR, fontname="DejaVu Sans", pad=0.3, nodesep=0.5, ranksep=1.1, bgcolor="white"];
   node  [fontname="DejaVu Sans", fontsize=11, color="#4a5568", penwidth=1.2];
